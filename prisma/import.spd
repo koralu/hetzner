@@ -1,0 +1,128 @@
+ALTER TABLE `US_keywords` convert to character set utf8mb4 collate utf8mb4_0900_as_cs;
+ALTER TABLE `temps` convert to character set utf8mb4 collate utf8mb4_0900_as_cs;
+ALTER TABLE `US_asins` convert to character set utf8mb4 collate utf8mb4_0900_as_cs;
+
+DROP PROCEDURE IF EXISTS import;
+CREATE PROCEDURE import(IN country_code VARCHAR(3), IN timeframe VARCHAR(10), IN ranked_at DATE, IN report_id INT)
+-- timeframe daily, weekly, monthly, quarterly --
+BEGIN
+DECLARE is_done INT DEFAULT 0;
+DECLARE is_unique INT DEFAULT 1;
+DECLARE dep VARCHAR(500); 
+DECLARE term VARCHAR(500); 
+DECLARE rnk VARCHAR(10) DEFAULT NULL;
+DECLARE a1 VARCHAR(50) DEFAULT NULL;
+DECLARE a2 VARCHAR(50) DEFAULT NULL;
+DECLARE a3 VARCHAR(50) DEFAULT NULL;
+DECLARE dep_aux VARCHAR(100) DEFAULT '';
+
+DECLARE kw_cursor CURSOR FOR
+	SELECT department, search_term, rankV, asin1, asin2, asin3 FROM temps;
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET is_done = 1;
+DECLARE CONTINUE HANDLER FOR 1062 SET is_unique = 0;
+
+OPEN kw_cursor;
+kw_loop: LOOP
+	FETCH kw_cursor INTO dep, term, rnk, a1, a2, a3;
+	IF is_done THEN LEAVE kw_loop;
+	END IF;
+		
+	IF (dep_aux <> dep) THEN 
+   		SET @dep_id = (SELECT id from departments where name = dep);
+   		SET dep_aux = dep;
+   END IF; 
+	
+	SET @keyword_id = NULL;
+	SET @sql_text = concat('SET @keyword_id = (SELECT id FROM ',country_code,'_keywords WHERE sterm = "',term,'");');	
+	PREPARE stmt FROM @sql_text;
+	EXECUTE stmt;	
+	DEALLOCATE PREPARE stmt;
+
+	
+	IF (@keyword_id IS NULL) THEN 
+    	SET @sql_text = concat('INSERT INTO ',country_code,'_keywords (sterm) VALUES ("',term,'");');
+        PREPARE stmt FROM @sql_text;
+        EXECUTE stmt;
+		DEALLOCATE PREPARE stmt;
+		SET @keyword_id = LAST_INSERT_ID();
+	END IF;
+	
+	-- Ranks --
+	SET @sql_text = concat('INSERT INTO ',country_code,'_',timeframe,'_ranks (keywordId,departmentId, rankV, rankedAt, reportId) VALUES (',@keyword_id,',',@dep_id,',',REPLACE(rnk, ",",""),',"',ranked_at,'",',report_id,')');
+	PREPARE stmt FROM @sql_text;
+	EXECUTE stmt;
+	DEALLOCATE PREPARE stmt;
+
+	IF is_unique THEN
+
+        -- ASIN1 --  
+        IF (a1 <> 'null' AND a1 > '') THEN
+            SET @asin_id = NULL;
+            SET @sql_text = concat('SET @asin_id = (SELECT id FROM ',country_code,'_asins WHERE name = "',a1,'");');	
+            PREPARE stmt FROM @sql_text;
+            EXECUTE stmt;	
+            DEALLOCATE PREPARE stmt;
+
+            IF (@asin_id IS NULL) THEN 
+                SET @sql_text = concat('INSERT INTO ',country_code,'_asins (name) VALUES ("',a1,'");');	
+                PREPARE stmt FROM @sql_text;
+                EXECUTE stmt;	
+                DEALLOCATE PREPARE stmt;
+                SET @asin_id = LAST_INSERT_ID();
+            END IF;
+            
+            SET @sql_text = concat('INSERT INTO ',country_code,'_',timeframe,'_asin_keywords (keywordId, asinId, asinRank, rankedAt, reportId) VALUES (',@keyword_id,',',@asin_id,',1,"',ranked_at,'",',report_id,')');
+            PREPARE stmt FROM @sql_text;
+            EXECUTE stmt;
+            DEALLOCATE PREPARE stmt;
+        END IF;
+
+        -- ASIN2 --  
+        IF (a2 <> 'null' AND a2 > '') THEN
+            SET @asin_id = NULL;
+            SET @sql_text = concat('SET @asin_id = (SELECT id FROM ',country_code,'_asins WHERE name = "',a2,'");');	
+            PREPARE stmt FROM @sql_text;
+            EXECUTE stmt;	
+            DEALLOCATE PREPARE stmt;
+
+            IF (@asin_id  IS NULL) THEN 
+                SET @sql_text = concat('INSERT INTO ',country_code,'_asins (name) VALUES ("',a2,'");');	
+                PREPARE stmt FROM @sql_text;
+                EXECUTE stmt;	
+                DEALLOCATE PREPARE stmt;
+                SET @asin_id = LAST_INSERT_ID();
+            END IF;
+            
+            SET @sql_text = concat('INSERT INTO ',country_code,'_',timeframe,'_asin_keywords (keywordId, asinId, asinRank, rankedAt, reportId) VALUES (',@keyword_id,',',@asin_id,',2,"',ranked_at,'",',report_id,')');
+            PREPARE stmt FROM @sql_text;
+            EXECUTE stmt;
+            DEALLOCATE PREPARE stmt;
+        END IF;
+        
+        -- ASIN3 --  
+        IF (a3 <> 'null' AND a3 > '') THEN
+            SET @asin_id = NULL;
+            SET @sql_text = concat('SET @asin_id = (SELECT id FROM ',country_code,'_asins WHERE name = "',a3,'");');	
+            PREPARE stmt FROM @sql_text;
+            EXECUTE stmt;	
+            DEALLOCATE PREPARE stmt;
+
+            IF (@asin_id  IS NULL) THEN 
+                SET @sql_text = concat('INSERT INTO ',country_code,'_asins (name) VALUES ("',a3,'");');	
+                PREPARE stmt FROM @sql_text;
+                EXECUTE stmt;	
+                DEALLOCATE PREPARE stmt;
+                SET @asin_id = LAST_INSERT_ID();
+            END IF;
+
+            SET @sql_text = concat('INSERT INTO ',country_code,'_',timeframe,'_asin_keywords (keywordId, asinId, asinRank, rankedAt, reportId) VALUES (',@keyword_id,',',@asin_id,',3,"',ranked_at,'",',report_id,')');
+            PREPARE stmt FROM @sql_text;
+            EXECUTE stmt;
+            DEALLOCATE PREPARE stmt;
+        END IF;
+    END IF;
+    SET is_unique = 1;
+END LOOP kw_loop;
+
+CLOSE kw_cursor;
+END;
