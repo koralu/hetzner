@@ -138,7 +138,7 @@ export default class GenerateReports {
 // (async function () {
 //   await GenerateReports.insertReportsByRange(
 //     1,
-//     moment.utc("2022-09-01"),
-//     moment.utc("2022-10-31")
+//     moment.utc("2018-11-30"),
+//     moment.utc("2022-12-31")
 //   );
 // })();

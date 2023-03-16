@@ -183,14 +183,14 @@ model UsDailyRanks {
   id           Int         @id @default(autoincrement())
   keywordId    Int
   rankV         Int
-  rankedAt     DateTime    @db.Date
   departmentId Int
   reportId     Int
   keyword      UsKeywords? @relation(fields: [keywordId], references: [id])
   report       Report?     @relation(fields: [reportId], references: [id])
 
-  @@unique([keywordId, rankedAt, departmentId], name: "dailyRank")
-  @@index([rankedAt, departmentId], name: "rankDepIndex")
+  @@unique([keywordId, departmentId, rankV, reportId], name: "dailyRank")
+  @@index([departmentId], name: "rankDepIndex")
+    @@index([reportId], name: "reportIndex")
   @@map(name: "US_daily_ranks")
 }
 
@@ -199,15 +199,14 @@ model UsDailyAsinKeywords {
   asinId    Int
   keywordId Int
   asinRank  Int
-  rankedAt  DateTime    @db.Date
   reportId  Int
   keyword   UsKeywords? @relation(fields: [keywordId], references: [id])
   asin      UsAsin?     @relation(fields: [asinId], references: [id])
   report    Report?     @relation(fields: [reportId], references: [id])
 
-  @@unique([asinId, keywordId, rankedAt, reportId], name: "asinKeyword")
+  @@unique([asinId, keywordId, reportId], name: "asinKeyword")
   @@index([keywordId], name: "kwIndex")
-  @@index([rankedAt], name: "rankedAt")
+  @@index([reportId], name: "reportIndex")
   @@map(name: "US_daily_asin_keywords")
 }
 
@@ -215,14 +214,14 @@ model UsWeeklyRanks {
   id           Int         @id @default(autoincrement())
   keywordId    Int
   rankV         Int
-  rankedAt     DateTime    @db.Date
   departmentId Int
   reportId     Int
   keyword      UsKeywords? @relation(fields: [keywordId], references: [id])
   report       Report?     @relation(fields: [reportId], references: [id])
 
-  @@unique([keywordId, rankedAt, departmentId], name: "weeeklyRank")
-  @@index([rankedAt, departmentId], name: "rankDepIndex")
+  @@unique([keywordId, departmentId, rankV, reportId], name: "weeeklyRank")
+  @@index([departmentId], name: "rankDepIndex")
+  @@index([reportId], name: "reportIndex")
   @@map(name: "US_weekly_ranks")
 }
 
@@ -231,15 +230,14 @@ model UsWeeklyAsinKeywords {
   asinId    Int
   keywordId Int
   asinRank  Int
-  rankedAt  DateTime    @db.Date
   reportId  Int
   keyword   UsKeywords? @relation(fields: [keywordId], references: [id])
   asin      UsAsin?     @relation(fields: [asinId], references: [id])
   report    Report?     @relation(fields: [reportId], references: [id])
 
-  @@unique([asinId, keywordId, rankedAt, reportId], name: "asinKeyword")
+  @@unique([asinId, keywordId, reportId], name: "asinKeyword")
   @@index([keywordId], name: "kwIndex")
-  @@index([rankedAt], name: "rankedAt")
+  @@index([reportId], name: "reportIndex")
   @@map(name: "US_weekly_asin_keywords")
 }
 
@@ -247,14 +245,14 @@ model UsMonthlyRanks {
   id           Int         @id @default(autoincrement())
   keywordId    Int
   rankV         Int
-  rankedAt     DateTime    @db.Date
   departmentId Int
   reportId     Int
   keyword      UsKeywords? @relation(fields: [keywordId], references: [id])
   report       Report?     @relation(fields: [reportId], references: [id])
 
-  @@unique([keywordId, rankedAt, departmentId], name: "monthlyRank")
-  @@index([rankedAt, departmentId], name: "rankDepIndex")
+  @@unique([keywordId, departmentId, rankV,  reportId], name: "monthlyRank")
+  @@index([reportId], name: "reportIndex")
+  @@index([departmentId], name: "rankDepIndex")
   @@map(name: "US_monthly_ranks")
 }
 
@@ -263,14 +261,13 @@ model UsMonthlyAsinKeywords {
   asinId    Int
   keywordId Int
   asinRank  Int
-  rankedAt  DateTime    @db.Date
   reportId  Int
   keyword   UsKeywords? @relation(fields: [keywordId], references: [id])
   asin      UsAsin?     @relation(fields: [asinId], references: [id])
   report    Report?     @relation(fields: [reportId], references: [id])
 
-  @@unique([asinId, keywordId, rankedAt, reportId], name: "asinKeyword")
+  @@unique([asinId, keywordId, reportId], name: "asinKeyword")
   @@index([keywordId], name: "kwIndex")
-  @@index([rankedAt], name: "rankedAt")
+  @@index([reportId], name: "reportIndex")
   @@map(name: "US_monthly_asin_keywords")
 }

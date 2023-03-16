@@ -330,30 +330,22 @@ export default class Report {
       ) t
       where asin <> 'null';
 
-      INSERT IGNORE INTO US_${timeframe.toLowerCase()}_ranks (keywordId, rankV, rankedAt, departmentId, reportId)
-      select u.id, replace(t.rankV, ",","") ,'${moment(endDay).format(
-        "YYYY-MM-DD"
-      )}',1,${reportId} from temps t
+      INSERT IGNORE INTO US_${timeframe.toLowerCase()}_ranks (keywordId, rankV, departmentId, reportId)
+      select u.id, replace(t.rankV, ",",""),1,${reportId} from temps t
       INNER JOIN US_keywords u ON u.sterm = t.search_term;
 
-      INSERT IGNORE INTO US_${timeframe.toLowerCase()}_asin_keywords (asinId,keywordId,asinRank,rankedAt,reportId)
-      (select a.id, k.id, 1,'${moment(endDay).format(
-        "YYYY-MM-DD"
-      )}',${reportId} from temps t
+      INSERT IGNORE INTO US_${timeframe.toLowerCase()}_asin_keywords (asinId,keywordId,asinRank,reportId)
+      (select a.id, k.id, 1, ${reportId} from temps t
       INNER JOIN US_keywords k ON t.search_term = k.sterm
       INNER JOIN US_asins a ON a.name = t.asin1
       WHERE t.asin1 <> 'null')
       UNION 
-      (select a.id, k.id, 2,'${moment(endDay).format(
-        "YYYY-MM-DD"
-      )}',${reportId} from temps t
+      (select a.id, k.id, 2,${reportId} from temps t
       INNER JOIN US_keywords k ON t.search_term = k.sterm
       INNER JOIN US_asins a ON a.name = t.asin2
       WHERE t.asin2 <> 'null')
       UNION
-      (select a.id, k.id, 3,'${moment(endDay).format(
-        "YYYY-MM-DD"
-      )}',${reportId} from temps t
+      (select a.id, k.id, 3,${reportId} from temps t
       INNER JOIN US_keywords k ON t.search_term = k.sterm
       INNER JOIN US_asins a ON a.name = t.asin3 
       WHERE t.asin3 <> 'null') 

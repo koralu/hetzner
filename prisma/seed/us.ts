@@ -31,7 +31,7 @@ export default async () => {
             },
             timeframe: "Daily",
             startValidAt: new Date("2021-12-01"),
-            endValidAt: new Date("2022-08-31"),
+            endValidAt: new Date("2022-12-31"),
           },
           {
             department: {
@@ -42,7 +42,7 @@ export default async () => {
             },
             timeframe: "Weekly",
             startValidAt: new Date("2020-11-29"),
-            endValidAt: new Date("2022-08-31"),
+            endValidAt: new Date("2022-12-31"),
           },
           {
             department: {
@@ -53,7 +53,7 @@ export default async () => {
             },
             timeframe: "Monthly",
             startValidAt: new Date("2018-11-01"),
-            endValidAt: new Date("2022-08-31"),
+            endValidAt: new Date("2022-12-31"),
           },
         ],
       }
@@ -63,7 +63,7 @@ export default async () => {
 
   await GenerateReports.insertReportsByRange(
     1,
-    moment.utc("2022-07-07"),
-    moment.utc("2022-07-08")
+    moment.utc("2022-01-01"),
+    moment.utc("2022-12-31")
   );
 };

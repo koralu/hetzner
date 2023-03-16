@@ -123,12 +123,12 @@ CREATE TABLE `US_daily_ranks` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `keywordId` INTEGER NOT NULL,
     `rankV` INTEGER NOT NULL,
-    `rankedAt` DATE NOT NULL,
     `departmentId` INTEGER NOT NULL,
     `reportId` INTEGER NOT NULL,
 
-    INDEX `rankDepIndex`(`rankedAt`, `departmentId`),
-    UNIQUE INDEX `US_daily_ranks_keywordId_rankedAt_departmentId_key`(`keywordId`, `rankedAt`, `departmentId`),
+    INDEX `rankDepIndex`(`departmentId`),
+    INDEX `reportIndex`(`reportId`),
+    UNIQUE INDEX `US_daily_ranks_keywordId_departmentId_rankV_reportId_key`(`keywordId`, `departmentId`, `rankV`, `reportId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -138,12 +138,11 @@ CREATE TABLE `US_daily_asin_keywords` (
     `asinId` INTEGER NOT NULL,
     `keywordId` INTEGER NOT NULL,
     `asinRank` INTEGER NOT NULL,
-    `rankedAt` DATE NOT NULL,
     `reportId` INTEGER NOT NULL,
 
     INDEX `kwIndex`(`keywordId`),
-    INDEX `rankedAt`(`rankedAt`),
-    UNIQUE INDEX `US_daily_asin_keywords_asinId_keywordId_rankedAt_reportId_key`(`asinId`, `keywordId`, `rankedAt`, `reportId`),
+    INDEX `reportIndex`(`reportId`),
+    UNIQUE INDEX `US_daily_asin_keywords_asinId_keywordId_reportId_key`(`asinId`, `keywordId`, `reportId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -152,12 +151,12 @@ CREATE TABLE `US_weekly_ranks` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `keywordId` INTEGER NOT NULL,
     `rankV` INTEGER NOT NULL,
-    `rankedAt` DATE NOT NULL,
     `departmentId` INTEGER NOT NULL,
     `reportId` INTEGER NOT NULL,
 
-    INDEX `rankDepIndex`(`rankedAt`, `departmentId`),
-    UNIQUE INDEX `US_weekly_ranks_keywordId_rankedAt_departmentId_key`(`keywordId`, `rankedAt`, `departmentId`),
+    INDEX `rankDepIndex`(`departmentId`),
+    INDEX `reportIndex`(`reportId`),
+    UNIQUE INDEX `US_weekly_ranks_keywordId_departmentId_rankV_reportId_key`(`keywordId`, `departmentId`, `rankV`, `reportId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -167,12 +166,11 @@ CREATE TABLE `US_weekly_asin_keywords` (
     `asinId` INTEGER NOT NULL,
     `keywordId` INTEGER NOT NULL,
     `asinRank` INTEGER NOT NULL,
-    `rankedAt` DATE NOT NULL,
     `reportId` INTEGER NOT NULL,
 
     INDEX `kwIndex`(`keywordId`),
-    INDEX `rankedAt`(`rankedAt`),
-    UNIQUE INDEX `US_weekly_asin_keywords_asinId_keywordId_rankedAt_reportId_key`(`asinId`, `keywordId`, `rankedAt`, `reportId`),
+    INDEX `reportIndex`(`reportId`),
+    UNIQUE INDEX `US_weekly_asin_keywords_asinId_keywordId_reportId_key`(`asinId`, `keywordId`, `reportId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -181,12 +179,12 @@ CREATE TABLE `US_monthly_ranks` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `keywordId` INTEGER NOT NULL,
     `rankV` INTEGER NOT NULL,
-    `rankedAt` DATE NOT NULL,
     `departmentId` INTEGER NOT NULL,
     `reportId` INTEGER NOT NULL,
 
-    INDEX `rankDepIndex`(`rankedAt`, `departmentId`),
-    UNIQUE INDEX `US_monthly_ranks_keywordId_rankedAt_departmentId_key`(`keywordId`, `rankedAt`, `departmentId`),
+    INDEX `reportIndex`(`reportId`),
+    INDEX `rankDepIndex`(`departmentId`),
+    UNIQUE INDEX `US_monthly_ranks_keywordId_departmentId_rankV_reportId_key`(`keywordId`, `departmentId`, `rankV`, `reportId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -196,12 +194,11 @@ CREATE TABLE `US_monthly_asin_keywords` (
     `asinId` INTEGER NOT NULL,
     `keywordId` INTEGER NOT NULL,
     `asinRank` INTEGER NOT NULL,
-    `rankedAt` DATE NOT NULL,
     `reportId` INTEGER NOT NULL,
 
     INDEX `kwIndex`(`keywordId`),
-    INDEX `rankedAt`(`rankedAt`),
-    UNIQUE INDEX `US_monthly_asin_keywords_asinId_keywordId_rankedAt_reportId_key`(`asinId`, `keywordId`, `rankedAt`, `reportId`),
+    INDEX `reportIndex`(`reportId`),
+    UNIQUE INDEX `US_monthly_asin_keywords_asinId_keywordId_reportId_key`(`asinId`, `keywordId`, `reportId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
