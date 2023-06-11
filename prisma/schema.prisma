@@ -271,3 +271,20 @@ model UsMonthlyAsinKeywords {
   @@index([reportId], name: "reportIndex")
   @@map(name: "US_monthly_asin_keywords")
 }
+
+model KeywordRankTemp {
+  id      Int    @id @default(autoincrement())
+  keyword String @db.VarChar(500)
+  rankV   Int
+
+  @@map(name: "_keywordRankTemp")
+}
+
+model AsinKeywordRankTemp {
+  id       Int    @id @default(autoincrement())
+  asin     String @db.VarChar(50)
+  asinRank Int
+  keyword  String @db.VarChar(500)
+
+  @@map(name: "_asinKeywordRankTemp")
+}

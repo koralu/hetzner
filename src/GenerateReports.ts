@@ -47,14 +47,14 @@ export default class GenerateReports {
   }
 
   private static getTimeframesByDay(day: Moment) {
-   //   const timeframes: Timeframe["name"][] = [];
+    //  const timeframes: Timeframe["name"][] = [];
     const timeframes: Timeframe["name"][] = ["Daily"];
     day.isoWeekday() == 6 && timeframes.push("Weekly");
     day.clone().endOf("month").format("YYYY-MM-DD") ==
       day.format("YYYY-MM-DD") && timeframes.push("Monthly");
 
-    // ["03-31", "06-30", "09-30", "12-31"].includes(day.format("MM-DD")) &&
-    //   timeframes.push("Quarterly");
+    ["03-31", "06-30", "09-30", "12-31"].includes(day.format("MM-DD")) &&
+      timeframes.push("Quarterly");
     return timeframes;
   }
 
@@ -138,7 +138,8 @@ export default class GenerateReports {
 // (async function () {
 //   await GenerateReports.insertReportsByRange(
 //     1,
-//     moment.utc("2018-11-30"),
-//     moment.utc("2022-12-31")
+//     moment.utc("2023-05-01"),
+//     moment.utc("2023-12-31")
 //   );
 // })();
+
