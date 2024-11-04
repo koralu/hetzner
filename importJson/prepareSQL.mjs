@@ -14,7 +14,7 @@ const prepareSQL = async (timeframe, reportId, endDay) => {
     )) && (await fs.promises.unlink(sqlFile));
 
     const sqlCommand = `
-    INSERT IGNORE INTO US_keywords (sterm) SELECT keyword FROM _keywordRankTemp kt;
+      INSERT IGNORE INTO US_keywords (sterm) SELECT keyword FROM _keywordRankTemp kt;
       INSERT IGNORE INTO US_asins (name) SELECT distinct(asin) from _asinKeywordRankTemp;
 
       DELETE t1 FROM _keywordRankTemp t1
@@ -27,7 +27,7 @@ const prepareSQL = async (timeframe, reportId, endDay) => {
       INNER JOIN _asinKeywordRankTemp t2 
       WHERE 
       t1.id > t2.id AND 
-      t1.keyword = t2.keyword AND t1.asinRank= t2.asinRank;
+      t1.keyword = t2.keyword AND t1.asinRank = t2.asinRank;
 
       INSERT IGNORE INTO US_${timeframe.toLowerCase()}_ranks (keywordId, rankV, departmentId, reportId)
       SELECT k.id, kt.rankV, 1, ${reportId} FROM _keywordRankTemp kt
@@ -39,7 +39,7 @@ const prepareSQL = async (timeframe, reportId, endDay) => {
       INNER JOIN US_asins a ON arkt.asin = a.name;
 
      TRUNCATE TABLE \`_keywordRankTemp\`;
-      TRUNCATE TABLE \`_asinKeywordRankTemp\`;
+     TRUNCATE TABLE \`_asinKeywordRankTemp\`;
     `
 
     try {

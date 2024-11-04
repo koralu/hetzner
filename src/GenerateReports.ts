@@ -47,7 +47,7 @@ export default class GenerateReports {
   }
 
   private static getTimeframesByDay(day: Moment) {
-    //  const timeframes: Timeframe["name"][] = [];
+    // const timeframes: Timeframe["name"][] = [];
     const timeframes: Timeframe["name"][] = ["Daily"];
     day.isoWeekday() == 6 && timeframes.push("Weekly");
     day.clone().endOf("month").format("YYYY-MM-DD") ==
@@ -82,6 +82,7 @@ export default class GenerateReports {
       },
       select: { id: true },
     });
+
 
     while (endDay.diff(startDay, "days") + 1 > 0) {
       const [validTimeframes, validDepartmentIds] =
@@ -124,7 +125,7 @@ export default class GenerateReports {
             endValidAt: { gte: moment.utc(day).toDate() },
           },
         });
-
+        
         isValidDay &&
           validTimeframes.push(timeframe) &&
           validDepartmentIds.push({ id: department.id });
@@ -135,11 +136,11 @@ export default class GenerateReports {
   }
 }
 
-// (async function () {
-//   await GenerateReports.insertReportsByRange(
-//     1,
-//     moment.utc("2023-05-01"),
-//     moment.utc("2023-12-31")
-//   );
-// })();
+(async function () {
+  await GenerateReports.insertReportsByRange(
+    1,
+    moment.utc("2024-09-01"),
+    moment.utc("2024-09-30")
+  );
+})();
 
